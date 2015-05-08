@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TTService")]
+[assembly: AssemblyTitle("OrderStore")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("FEUP")]
-[assembly: AssemblyProduct("TTService")]
-[assembly: AssemblyCopyright("Copyright © FEUP 2014")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("OrderStore")]
+[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("59ab0091-2e6a-44e3-86f4-c8c7c5b76181")]
+[assembly: Guid("7a51f7b5-9402-4311-9b8e-a21432b12056")]
 
 // Version information for an assembly consists of the following four values:
 //

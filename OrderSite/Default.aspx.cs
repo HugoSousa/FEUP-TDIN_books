@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Drawing;
 using System.Web.UI;
-using TTSvc;
+using StoreService;
 
 public partial class _Default : Page {
-  TTServClient proxy;
+    OrderServiceClient proxy;
 
   protected void Page_Load(object sender, EventArgs e) {
-    proxy = new TTServClient();
+      proxy = new OrderServiceClient();
   }
 
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        
+    }
+
+    /*
   protected void Button1_Click(object sender, EventArgs e) {
     int id = 0;
 
@@ -42,4 +48,5 @@ public partial class _Default : Page {
       Label2.Text = "Select an Author!";
     }
   }
+     * */
 }
