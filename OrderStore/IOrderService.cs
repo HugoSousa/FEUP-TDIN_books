@@ -11,7 +11,7 @@ namespace StoreService
         */
 
         [OperationContract]
-        void CreateOrder(string title, string client, string email, string address, int quantity);
+        int CreateOrder(string title, string client, string email, string address, int quantity);
 
         /*
       [OperationContract]

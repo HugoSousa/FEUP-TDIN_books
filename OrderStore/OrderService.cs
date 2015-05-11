@@ -1,6 +1,8 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Messaging;
 
 namespace StoreService
 {
@@ -49,35 +51,72 @@ namespace StoreService
       }
       */
 
-        public void CreateOrder(string title, string client, string email, string address, int quantity)
+        public int CreateOrder(string title, string client, string email, string address, int quantity)
         {
+            int stock;
+
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
             {
                 try
                 {
                     c.Open();
-                    string sql = "insert into order(id, quantity, client_name, address, email, state, state_date, book, total_price) " +
-                                 "values(@id, @quantity, @client_name, @address, @email, @state, @state_date, @book, @total_price)";
+                    string sql = "select stock from [book] where title = @title";
                     SqlCommand cmd = new SqlCommand(sql, c);
-                    //SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                    cmd.Parameters.Add("@id", SqlDbType.Int).Value = 1;
-                    cmd.Parameters.Add("@quantity", SqlDbType.Int).Value = 2;
-                    cmd.Parameters.Add("@client_name", SqlDbType.NVarChar, 80).Value = "Ricardo Silva";
-                    cmd.Parameters.Add("@address", SqlDbType.NVarChar, 80).Value = "Rua das Flores, 82";
-                    cmd.Parameters.Add("@email", SqlDbType.NVarChar, 80).Value = "ricardani@gmail.com";
-                    cmd.Parameters.Add("@state", SqlDbType.Char, 1).Value = "W";
-                    cmd.Parameters.Add("@state_date", SqlDbType.DateTime2).Value = "null";
-                    cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = "Titulo1";
-                    cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = "50.2";
+                    cmd.Parameters.Add("@title", SqlDbType.Int).Value = title;
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (!reader.HasRows)
+                        return -1;
+                    else
+                    {
+                        stock = reader.GetInt32(0);
+                    }
                 }
                 catch (SqlException)
                 {
+                    return -2;
                 }
                 finally
                 {
                     c.Close();
                 }
             }
+
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            {
+                try
+                {
+                    c.Open();
+                    string sql =
+                        "insert into [order](quantity, client_name, address, email, state, state_date, book, total_price) " +
+                        "values(@quantity, @client_name, @address, @email, @state, @state_date, @book, @total_price)";
+                    SqlCommand cmd = new SqlCommand(sql, c);
+                    cmd.Parameters.Add("@quantity", SqlDbType.Int).Value = quantity;
+                    cmd.Parameters.Add("@client_name", SqlDbType.NVarChar, 80).Value = client;
+                    cmd.Parameters.Add("@address", SqlDbType.NVarChar, 80).Value = address;
+                    cmd.Parameters.Add("@email", SqlDbType.NVarChar, 80).Value = email;
+                    if (stock >= quantity)
+                    {
+                        cmd.Parameters.Add("@state", SqlDbType.Char, 1).Value = '';
+                    }
+                    else
+                        cmd.Parameters.Add("@state", SqlDbType.Char, 1).Value = 'W';
+
+                    cmd.Parameters.Add("@state_date", SqlDbType.DateTime2).Value = DBNull.Value;
+                    cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
+                    cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = 50.2;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException exception)
+                {
+                    return -2;
+                    Console.WriteLine(exception);
+                }
+                finally
+                {
+                    c.Close();
+                }
+            }
+            return 0;
         }
     }
 }

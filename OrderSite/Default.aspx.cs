@@ -49,4 +49,9 @@ public partial class _Default : Page {
     }
   }
      * */
+
+    protected void CreateOrderButton_OnClick_(object sender, EventArgs e)
+    {
+        proxy.CreateOrder(null, null, null, null, 0);
+    }
 }

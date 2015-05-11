@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderStore", "OrderStore\OrderStore.csproj", "{1B9F23EE-5C06-48BF-9424-5255F078E4C8}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "OrderSite", "http://localhost:8994", "{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "OrderSite(3)", "http://localhost:8994", "{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
@@ -25,6 +25,9 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "OrderSite", "http://localho
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "OrderSite\"
 		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{1B9F23EE-5C06-48BF-9424-5255F078E4C8} = {1B9F23EE-5C06-48BF-9424-5255F078E4C8}
 	EndProjectSection
 EndProject
 Global

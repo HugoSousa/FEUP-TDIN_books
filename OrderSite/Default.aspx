@@ -27,6 +27,7 @@
                 </td>
             </tr>
         </table>
+        <asp:Button runat="server" ID="CreateOrderButton" Text="Create an Order" OnClick="CreateOrderButton_OnClick_"/>
     </div>
     <asp:SqlDataSource ID="Books" runat="server" ConnectionString="Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\store_db.mdf;Integrated Security=True" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Book]"></asp:SqlDataSource>
 </form>
