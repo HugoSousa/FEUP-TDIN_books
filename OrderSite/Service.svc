@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Service="StoreService.OrderService" %>
+﻿<%@ ServiceHost Service="OrderStore.OrderService" %>

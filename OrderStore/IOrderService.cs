@@ -1,21 +1,24 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
 
-namespace StoreService
+namespace OrderStore
 {
     [ServiceContract]
     public interface IOrderService
     {
-        /*
-      [OperationContract]
-      int AddTicket(int author, string Problem);
-        */
-
         [OperationContract]
         int CreateOrder(string title, string client, string email, string address, int quantity);
 
-        /*
-      [OperationContract]
-      DataTable GetTickets(int author);
-        */
+        [OperationContract]
+        int GetStock(string title);
+
+        [OperationContract]
+        int StoreSell(string title, string client, int quantity);
+
+        [OperationContract]
+        int UpdateStock(string title, int quantity);
+
+        [OperationContract]
+        int ChangeOrderState(int id, char state, string stateDate);
     }
 }
