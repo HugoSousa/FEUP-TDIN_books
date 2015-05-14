@@ -322,5 +322,32 @@ namespace OrderStore
 
             return 0;
         }
+
+        public DataTable GetOrder(int id)
+        {
+            DataTable result = new DataTable("Order");
+
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            {
+                try
+                {
+                    c.Open();
+                    string sql = "select * from [Order] where id = @id";
+                    SqlCommand cmd = new SqlCommand(sql, c);
+                    cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(result);
+                }
+                catch (SqlException)
+                {
+                }
+                finally
+                {
+                    c.Close();
+                }
+            }
+
+            return result;
+        }
     }
 }

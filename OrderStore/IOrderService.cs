@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.ServiceModel;
 
 namespace OrderStore
@@ -20,5 +21,8 @@ namespace OrderStore
 
         [OperationContract]
         int ChangeOrderState(int id, char state, string stateDate);
+
+        [OperationContract]
+        DataTable GetOrder(int id);
     }
 }
