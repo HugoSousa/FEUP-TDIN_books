@@ -52,6 +52,7 @@ namespace OrderStore
                     c.Open();
                     string sql =
                         "insert into [order](quantity, client_name, address, email, state, state_date, book, total_price) " +
+                        "output inserted.id " +
                         "values(@quantity, @client_name, @address, @email, @state, @state_date, @book, @total_price)";
                     SqlCommand cmd = new SqlCommand(sql, c);
                     cmd.Parameters.Add("@quantity", SqlDbType.Int).Value = quantity;
@@ -63,6 +64,7 @@ namespace OrderStore
                         cmd.Parameters.Add("@state", SqlDbType.Char, 1).Value = 'D'; //dispatched in next day
                         DateTime nextDay = DateTime.Now.AddDays(1);
                         cmd.Parameters.Add("@state_date", SqlDbType.DateTime2).Value = nextDay.ToString("yyyy-MM-dd");
+                        UpdateStock(title, 0-quantity);
                         // TODO: send email to the client with the info
                     }
                     else
@@ -76,7 +78,8 @@ namespace OrderStore
                     cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
                     cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = unitPrice * quantity;
 
-                    cmd.ExecuteNonQuery();
+                    Int32 inserted = (Int32)cmd.ExecuteScalar();
+                    return inserted;
                 }
                 catch (SqlException)
                 {
@@ -335,6 +338,32 @@ namespace OrderStore
                     string sql = "select * from [Order] where id = @id";
                     SqlCommand cmd = new SqlCommand(sql, c);
                     cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(result);
+                }
+                catch (SqlException)
+                {
+                }
+                finally
+                {
+                    c.Close();
+                }
+            }
+
+            return result;
+        }
+
+        public DataTable GetBooks()
+        {
+            DataTable result = new DataTable("Book");
+
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            {
+                try
+                {
+                    c.Open();
+                    string sql = "select * from [Book]";
+                    SqlCommand cmd = new SqlCommand(sql, c);
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     adapter.Fill(result);
                 }

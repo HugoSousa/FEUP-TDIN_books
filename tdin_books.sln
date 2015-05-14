@@ -30,6 +30,11 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "OrderSite(3)", "http://loca
 		{1B9F23EE-5C06-48BF-9424-5255F078E4C8} = {1B9F23EE-5C06-48BF-9424-5255F078E4C8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreGUI", "StoreGUI\StoreGUI.csproj", "{A9237C8D-5883-4A2C-9837-1E20812C8B7C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2} = {C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +49,10 @@ Global
 		{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{A9237C8D-5883-4A2C-9837-1E20812C8B7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9237C8D-5883-4A2C-9837-1E20812C8B7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9237C8D-5883-4A2C-9837-1E20812C8B7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9237C8D-5883-4A2C-9837-1E20812C8B7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,28 @@
+﻿<Window x:Class="StoreGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="376" Width="533">
+    <Grid Margin="0,0,0.4,-19.6">
+        <ListBox Name="BooksList"  HorizontalAlignment="Left" Margin="82,29,0,170" Width="376">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Width="346">
+                        <TextBlock Name="title" Width="115" Text="{Binding Path=title}"></TextBlock>
+                        <TextBlock Name="stock" Width="115" Text="{Binding Path=stock}"></TextBlock>
+                        <TextBlock Name="price" Width="115" Text="{Binding Path=price}"></TextBlock>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label Content="Client Name:" HorizontalAlignment="Left" Margin="82,243,0,0" VerticalAlignment="Top"/>
+        <Label Content="Quantity:" HorizontalAlignment="Left" Margin="82,212,0,0" VerticalAlignment="Top"/>
+        <Label Content="Price:" HorizontalAlignment="Left" Margin="82,274,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,246,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,276,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Sell" HorizontalAlignment="Left" Margin="225,311,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+
+
+    </Grid>
+
+</Window>
