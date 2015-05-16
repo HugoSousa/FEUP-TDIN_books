@@ -12,6 +12,8 @@ public partial class TrackOrder : System.Web.UI.Page
 
     protected void GetOrder_Click(object sender, EventArgs e)
     {
+        ClearFields();
+
         DataTable dt = _proxy.GetOrder(Convert.ToInt32(OrderCode.Text));
 
         if (dt.Rows.Count > 0)
@@ -30,7 +32,7 @@ public partial class TrackOrder : System.Web.UI.Page
                     OrderState.Text = "Waiting for expedition.";
                     break;
                 case "D":
-                    OrderState.Text = "Dispatched at" + dt.Rows[0]["state_date"];
+                    OrderState.Text = "Dispatched at " + dt.Rows[0]["state_date"].ToString().Split(null)[0];
                     break;
                 //TODO outro state?
             }
@@ -38,7 +40,22 @@ public partial class TrackOrder : System.Web.UI.Page
         else
         {
             //order id doesn't exist
-            ErrorInfo.Text = "The order id " + Convert.ToInt32(OrderCode.Text) + "doesn't exist.";
+            ErrorInfo.Text = "The order id " + Convert.ToInt32(OrderCode.Text) + " doesn't exist.";
         }
     }
+
+    private void ClearFields()
+    {
+        ErrorInfo.Text = "";
+        OrderId.Text = "";
+        OrderBook.Text = "";
+        OrderQuantity.Text = "";
+        OrderPrice.Text = "";
+        OrderClient.Text = "";
+        OrderAddress.Text = "";
+        OrderEmail.Text = "";
+        OrderState.Text = "";
+        OrderDate.Text = "";
+    }
+
 }

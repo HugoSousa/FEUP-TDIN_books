@@ -24,5 +24,8 @@ namespace OrderStore
 
         [OperationContract]
         DataTable GetOrder(int id);
+
+        [OperationContract]
+        DataTable GetBooks();
     }
 }
