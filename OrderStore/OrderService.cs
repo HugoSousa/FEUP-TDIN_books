@@ -8,6 +8,12 @@ namespace OrderStore
 {
     public class OrderService : IOrderService
     {
+        Warehouse proxy_wh;
+        public OrderService()
+        {
+            proxy_wh = new Warehouse();
+
+        }
         //return -1 if the book title doesn't exist
         //return -2 if other sql error
         //Order from the Web! 
@@ -348,6 +354,12 @@ namespace OrderStore
             }
 
             return result;
+        }
+        private void checkMessageQueue()
+        {
+
+
+
         }
     }
 }
