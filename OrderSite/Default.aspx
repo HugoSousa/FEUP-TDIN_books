@@ -59,6 +59,8 @@
         <br/>
        
         <asp:Button runat="server" ID="Order" Text="Order Item" OnClick="OrderItem_OnClick_"/>
+        
+        <asp:Button runat="server" ID="ButtonTeste" Text="Test MSMQ" OnClick="Test"/>
 
     </div>
     <asp:SqlDataSource ID="Books" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT * FROM [Book]"></asp:SqlDataSource>

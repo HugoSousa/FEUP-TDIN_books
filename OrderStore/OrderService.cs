@@ -8,12 +8,7 @@ namespace OrderStore
 {
     public class OrderService : IOrderService
     {
-        Warehouse proxy_wh;
-        public OrderService()
-        {
-            proxy_wh = new Warehouse();
 
-        }
         //return -1 if the book title doesn't exist
         //return -2 if other sql error
         //Order from the Web! 
@@ -49,7 +44,7 @@ namespace OrderStore
                 {
                     c.Close();
                 }
-            } 
+            }
 
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
             {
@@ -70,7 +65,7 @@ namespace OrderStore
                         cmd.Parameters.Add("@state", SqlDbType.Char, 1).Value = 'D'; //dispatched in next day
                         DateTime nextDay = DateTime.Now.AddDays(1);
                         cmd.Parameters.Add("@state_date", SqlDbType.DateTime2).Value = nextDay.ToString("yyyy-MM-dd");
-                        UpdateStock(title, 0-quantity);
+                        UpdateStock(title, 0 - quantity);
                         // TODO: send email to the client with the info
                     }
                     else
@@ -79,12 +74,13 @@ namespace OrderStore
                         cmd.Parameters.Add("@state_date", SqlDbType.DateTime2).Value = DBNull.Value;
 
                         // TODO: send message to the warehouse (10 * quantity)
+                        Warehouse.SendMessage(new BookOrder(title, 10*quantity));
                     }
 
                     cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
-                    cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = unitPrice * quantity;
+                    cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = unitPrice*quantity;
 
-                    Int32 inserted = (Int32)cmd.ExecuteScalar();
+                    Int32 inserted = (Int32) cmd.ExecuteScalar();
                     return inserted;
                 }
                 catch (SqlException)
@@ -96,6 +92,7 @@ namespace OrderStore
                     c.Close();
                 }
             }
+
             return 0;
         }
 
@@ -103,7 +100,9 @@ namespace OrderStore
         {
             int stock;
 
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -145,7 +144,9 @@ namespace OrderStore
                 return -1;
             }
 
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -174,7 +175,9 @@ namespace OrderStore
                 }
             }
 
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -185,12 +188,12 @@ namespace OrderStore
                     cmd.Parameters.Add("@client", SqlDbType.NVarChar, 80).Value = client;
                     cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
                     cmd.Parameters.Add("@quantity", SqlDbType.Int).Value = quantity;
-                    cmd.Parameters.Add("@total_price", SqlDbType.NVarChar, 50).Value = quantity * unitPrice;
+                    cmd.Parameters.Add("@total_price", SqlDbType.NVarChar, 50).Value = quantity*unitPrice;
                     cmd.ExecuteNonQuery();
 
                     UpdateStock(title, 0 - quantity);
                 }
-                catch (SqlException e)
+                catch (SqlException)
                 {
                     return -2;
                 }
@@ -205,12 +208,14 @@ namespace OrderStore
             return 0;
         }
 
-        
+
         public int UpdateStock(string title, int quantity)
         {
             int newStock = GetStock(title) + quantity;
 
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -288,7 +293,9 @@ namespace OrderStore
 
         public int ChangeOrderState(int id, char state, string stateDate)
         {
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -336,7 +343,9 @@ namespace OrderStore
         {
             DataTable result = new DataTable("Order");
 
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -361,16 +370,16 @@ namespace OrderStore
 
         private void checkMessageQueue()
         {
-
-
-   	 }
+        }
 
 
         public DataTable GetBooks()
         {
             DataTable result = new DataTable("Book");
 
-            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
+            using (
+                SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString)
+                )
             {
                 try
                 {
@@ -392,4 +401,9 @@ namespace OrderStore
             return result;
         }
 
+        public void TestMSMQ(string body)
+        {
+            Warehouse.SendMessage(new BookOrder("tituloteste", 10));
+        }
+    }
 }

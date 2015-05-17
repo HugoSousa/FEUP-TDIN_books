@@ -1,33 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Messaging;
-using System.Runtime.InteropServices;
 
 namespace OrderStore 
 {
 
-    class Warehouse: System.ComponentModel.ISynchronizeInvoke
+    class Warehouse
     {            
-        private MessageQueue WarehouseQueue;
-        public string QueueName = "warehouse_books";
+        private readonly MessageQueue _warehouseQueue;
+        private readonly string _queueName = "warehouse_books";
+        private readonly string _machineName = ".";
         public Warehouse() 
         {
-            this.WarehouseQueue = new MessageQueue();
-            this.WarehouseQueue.MessageReadPropertyFilter.LookupId = true;
-            this.WarehouseQueue.SynchronizingObject = this;
-            VerifyQueue();
+            this._warehouseQueue = new MessageQueue("FormatName:DIRECT=OS:" + _machineName + "\\Private$\\" + _queueName);
+            this._warehouseQueue.MessageReadPropertyFilter.LookupId = true;
+            this._warehouseQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(BookOrder) });
+            //check if queue exists only works for local queues, not remote ones
+            //VerifyQueue();
         }
 
         private void VerifyQueue()
         {
-            if (!MessageQueue.Exists(".\\private$\\" + QueueName))
+            if (!MessageQueue.Exists("FormatName:DIRECT=OS:" + _machineName + "\\Private$\\" + _queueName))
             {
                 try
                 {
-                    MessageQueue.Create(".\\private$\\" + QueueName);
+                    MessageQueue.Create("FormatName:DIRECT=OS:" + _machineName + "\\Private$\\" + _queueName);
                 }
                 catch (MessageQueueException ex)
                 {
@@ -41,22 +38,22 @@ namespace OrderStore
             }
         }
 
-
-        public IAsyncResult BeginInvoke(Delegate method, object[] args)
+        public static void SendMessage(BookOrder order)
         {
-            throw new NotImplementedException();
+            Warehouse wh = new Warehouse();
+            wh.Send(order);
         }
 
-        public object EndInvoke(IAsyncResult result)
+        public void Send(BookOrder body)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _warehouseQueue.Send(body, "StoreRequest");
+            }
+            catch (MessageQueueException e)
+            {
+                Console.WriteLine(e);
+            }
         }
-
-        public object Invoke(Delegate method, object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool InvokeRequired { get; private set; }
     }
 }

@@ -128,5 +128,10 @@ public partial class _Default : Page
         
         //_proxy.ChangeOrderState(2, 'D', DateTime.Now.ToString("yyyy-MM-dd"));
     }
+
+    public void Test(object sender, EventArgs e)
+    {
+        _proxy.TestMSMQ("teste");
+    }
     
 }

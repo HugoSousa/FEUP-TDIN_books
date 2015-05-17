@@ -27,5 +27,8 @@ namespace OrderStore
 
         [OperationContract]
         DataTable GetBooks();
+
+        [OperationContract]
+        void TestMSMQ(string body);
     }
 }
