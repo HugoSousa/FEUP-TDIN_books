@@ -36,6 +36,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreGUI", "StoreGUI\StoreG
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseGUI", "WarehouseGUI\WarehouseGUI.csproj", "{3D0EF3FC-D0D7-41A5-A4E7-3F33417DF039}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5568172-F84F-4858-AC8D-BE25CAD35593} = {C5568172-F84F-4858-AC8D-BE25CAD35593}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseServer", "WarehouseServer\WarehouseServer.csproj", "{314FBC36-96D8-4FDE-B90F-0997F292F625}"
 	ProjectSection(ProjectDependencies) = postProject

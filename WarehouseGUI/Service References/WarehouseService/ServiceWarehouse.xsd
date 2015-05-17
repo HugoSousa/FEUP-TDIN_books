@@ -31,7 +31,6 @@
         <xs:element minOccurs="0" name="quantity" type="xs:int" />
         <xs:element minOccurs="0" name="sent" type="xs:dateTime" />
         <xs:element minOccurs="0" name="received" type="xs:dateTime" />
-        <xs:element minOccurs="0" name="orderId" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

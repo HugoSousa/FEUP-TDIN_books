@@ -16,7 +16,7 @@ namespace OrderStore
         {
             int stock;
             double unitPrice;
-
+            bool requestWarehouse = false;
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["store_db"].ConnectionString))
             {
                 try
@@ -73,14 +73,19 @@ namespace OrderStore
                         cmd.Parameters.Add("@state", SqlDbType.Char, 1).Value = 'W'; //waiting expedition
                         cmd.Parameters.Add("@state_date", SqlDbType.DateTime2).Value = DBNull.Value;
 
-                        // TODO: send message to the warehouse (10 * quantity)
-                        Warehouse.SendMessage(new BookOrder(title, 10*quantity));
+                        
+                        requestWarehouse = true;
+                        
                     }
 
                     cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
                     cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = unitPrice*quantity;
 
                     Int32 inserted = (Int32) cmd.ExecuteScalar();
+
+                    if(requestWarehouse)
+                        Warehouse.SendMessage(new BookOrder(title, 10 * quantity, inserted));
+
                     return inserted;
                 }
                 catch (SqlException)
@@ -403,7 +408,7 @@ namespace OrderStore
 
         public void TestMSMQ(string body)
         {
-            Warehouse.SendMessage(new BookOrder("tituloteste", 10));
+            Warehouse.SendMessage(new BookOrder("tituloteste", 10, 1));
         }
     }
 }

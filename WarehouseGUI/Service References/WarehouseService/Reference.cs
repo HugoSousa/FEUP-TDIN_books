@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WarehouseServer.WarehouseService {
+namespace WarehouseGUI.WarehouseService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -22,10 +22,10 @@ namespace WarehouseServer.WarehouseService {
         System.Threading.Tasks.Task<System.Data.DataTable> GetOpenRequestsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/AddRequest", ReplyAction="http://tempuri.org/IWarehouseService/AddRequestResponse")]
-        int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId);
+        int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/AddRequest", ReplyAction="http://tempuri.org/IWarehouseService/AddRequestResponse")]
-        System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId);
+        System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/ShipRequest", ReplyAction="http://tempuri.org/IWarehouseService/ShipRequestResponse")]
         int ShipRequest(int id);
@@ -35,12 +35,12 @@ namespace WarehouseServer.WarehouseService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IWarehouseServiceChannel : WarehouseServer.WarehouseService.IWarehouseService, System.ServiceModel.IClientChannel {
+    public interface IWarehouseServiceChannel : WarehouseGUI.WarehouseService.IWarehouseService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class WarehouseServiceClient : System.ServiceModel.ClientBase<WarehouseServer.WarehouseService.IWarehouseService>, WarehouseServer.WarehouseService.IWarehouseService {
+    public partial class WarehouseServiceClient : System.ServiceModel.ClientBase<WarehouseGUI.WarehouseService.IWarehouseService>, WarehouseGUI.WarehouseService.IWarehouseService {
         
         public WarehouseServiceClient() {
         }
@@ -69,12 +69,12 @@ namespace WarehouseServer.WarehouseService {
             return base.Channel.GetOpenRequestsAsync();
         }
         
-        public int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId) {
-            return base.Channel.AddRequest(title, quantity, sent, received, orderId);
+        public int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received) {
+            return base.Channel.AddRequest(title, quantity, sent, received);
         }
         
-        public System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId) {
-            return base.Channel.AddRequestAsync(title, quantity, sent, received, orderId);
+        public System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received) {
+            return base.Channel.AddRequestAsync(title, quantity, sent, received);
         }
         
         public int ShipRequest(int id) {

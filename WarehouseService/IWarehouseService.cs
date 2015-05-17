@@ -9,10 +9,10 @@ namespace WarehouseService
     {
 
         [OperationContract]
-        DataTable GetOpenRequests(int id);
+        DataTable GetOpenRequests();
 
         [OperationContract]
-        int AddRequest(string title, int quantity, DateTime sent, DateTime received);
+        int AddRequest(string title, int quantity, DateTime sent, DateTime received, int orderId);
 
         [OperationContract]
         int ShipRequest(int id);

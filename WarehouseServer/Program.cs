@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace WarehouseServer
 {
-    class Program
-    {
+    public class Program
+    {   
+
         static void Main(string[] args)
         {
-            Server server = new Server();
+            Server server= new Server();
             Console.WriteLine("Reading messages from warehouse_books queue. Ctrl + C to stop updating.");
             while (true)
             {   

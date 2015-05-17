@@ -5,8 +5,10 @@ using WarehouseServer.WarehouseService;
 
 namespace WarehouseServer
 {
-    class Server
+    public class Server
     {
+        public event EventHandler NewRequest;
+
         private readonly MessageQueue _warehouseQueue;
         private readonly string _queueName = "warehouse_books";
         private readonly string _machineName = ".";
@@ -17,6 +19,8 @@ namespace WarehouseServer
         {
             _warehouseQueue = new MessageQueue("FormatName:DIRECT=OS:" + _machineName + "\\Private$\\" + _queueName);
             _warehouseQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(BookOrder) });
+            _warehouseQueue.MessageReadPropertyFilter.SetAll();
+            _proxy = new WarehouseServiceClient();
         }
 
         public void ReadMessage()
@@ -24,10 +28,14 @@ namespace WarehouseServer
             try
             {
                 Message message = _warehouseQueue.Receive();
+                
                 BookOrder body = (BookOrder) message.Body;
 
                 if (message.Label.Equals("StoreRequest"))
-                    _proxy.AddRequest(body.Title, body.Quantity, message.SentTime, message.ArrivedTime);
+                {
+                    if(_proxy.AddRequest(body.Title, body.Quantity, message.SentTime, message.ArrivedTime, body.OrderId) == 0)
+                        OnNewRequest(null);
+                }
             }
             catch (MessageQueueException e)
             {
@@ -38,6 +46,23 @@ namespace WarehouseServer
             {
                 Console.WriteLine("Message with invalid format was consumed.");
                 return;
+            }
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+                ReadMessage();
+            }
+        }
+
+        protected virtual void OnNewRequest(EventArgs e)
+        {
+            EventHandler handler = NewRequest;
+            if (handler != null)
+            {
+                handler(this, e);
             }
         }
     }
