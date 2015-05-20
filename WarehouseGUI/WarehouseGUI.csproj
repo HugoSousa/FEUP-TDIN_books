@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -136,6 +137,10 @@
     <ProjectReference Include="..\WarehouseServer\WarehouseServer.csproj">
       <Project>{314fbc36-96d8-4fde-b90f-0997f292f625}</Project>
       <Name>WarehouseServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WarehouseService\WarehouseService.csproj">
+      <Project>{C5568172-F84F-4858-AC8D-BE25CAD35593}</Project>
+      <Name>WarehouseService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

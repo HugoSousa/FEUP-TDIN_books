@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Data;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using System.ServiceModel;
 using System.Windows;
 using WarehouseGUI.WarehouseService;
-using WarehouseServer;
+using WarehouseService;
 
 namespace WarehouseGUI
 {
@@ -36,24 +36,31 @@ namespace WarehouseGUI
 
         public MainWindow()
         {
-            _proxy = new WarehouseServiceClient();
             InitializeComponent();
             DataContext = this;
-            _requests = _proxy.GetOpenRequests();
 
+            MyServiceCallback callback = new MyServiceCallback(this);
+            InstanceContext instanceContext = new InstanceContext(callback);
+            _proxy = new WarehouseServiceClient(instanceContext);
+            _proxy.Subscribe();
+            _requests = _proxy.GetOpenRequests();
+            //_proxy.AddRequest("a", 1, DateTime.Now, DateTime.Now, 1);
+            
+            /*
             Server server = new Server();
             Task.Run(() =>
             {
                 server.Run();
             });
             server.NewRequest += RequestAdded;
+             */
 
             RequestsList.ItemsSource = _requests.DefaultView;
         }
 
-        private void RequestAdded(object sender, EventArgs e)
+        public void RequestAdded(object sender, EventArgs e)
         {
-            Dispatcher.Invoke((Action)(() =>
+            Dispatcher.BeginInvoke((Action)(() =>
             {
                 _requests = _proxy.GetOpenRequests();
                 RequestsList.ItemsSource = _requests.DefaultView;
@@ -84,6 +91,23 @@ namespace WarehouseGUI
         {
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    [CallbackBehavior(ConcurrencyMode=ConcurrencyMode.Multiple, UseSynchronizationContext=false)]
+    public class MyServiceCallback : IWarehouseServiceCallback
+    {
+        private readonly MainWindow _gui;
+
+        public MyServiceCallback(MainWindow gui)
+        {
+            _gui = gui;
+        }
+
+        public void OnCallback()
+        {
+            Console.WriteLine("ahh");
+            _gui.RequestAdded(null, null);
         }
     }
 }

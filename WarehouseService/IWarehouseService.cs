@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.ServiceModel;
 
 namespace WarehouseService
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract=typeof(IMyServiceCallback))]
     public interface IWarehouseService
     {
-
         [OperationContract]
         DataTable GetOpenRequests();
 
@@ -16,5 +16,11 @@ namespace WarehouseService
 
         [OperationContract]
         int ShipRequest(int id);
+
+        [OperationContract]
+        void Subscribe();
+
+        [OperationContract]
+        void Unsubscribe();
     }
 }

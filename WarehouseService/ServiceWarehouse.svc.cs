@@ -1,14 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using System.ServiceModel;
+using System.Threading;
 using WarehouseService.StoreService;
 
 namespace WarehouseService
 {
     // NOTE: In order to launch WCF Test Client for testing this service, please select WarehouseServ.svc or WarehouseServ.svc.cs at the Solution Explorer and start debugging.
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode=InstanceContextMode.Single)]
     public class WarehouseServ : IWarehouseService
     {
+        //public static IMyServiceCallback Callback;
+
+        private List<IMyServiceCallback> _subscribers = new List<IMyServiceCallback>();
+        private readonly object _locker = new object();
+
         public DataTable GetOpenRequests()
         {
             DataTable result = new DataTable("Request");
@@ -64,6 +74,15 @@ namespace WarehouseService
                 }
             }
 
+            IMyServiceCallback Callback = OperationContext.Current.GetCallbackChannel<IMyServiceCallback>();
+            foreach (var subscriber in _subscribers)
+            {
+                var callbackComm = (ICommunicationObject)subscriber;
+                if (callbackComm.State == CommunicationState.Opened)
+                    subscriber.OnCallback();
+            }
+            
+
             return 0;
         }
 
@@ -100,5 +119,77 @@ namespace WarehouseService
             return 0;
              
         }
+
+        public void Subscribe()
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<IMyServiceCallback>();
+                lock (_locker)
+                {
+                    _subscribers.Add(callback);
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        public void Unsubscribe()
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<IMyServiceCallback>();
+                lock (_locker)
+                {
+                    _subscribers.Remove(callback);
+                }
+
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        public IAsyncResult BeginAsyncTest(string msg, AsyncCallback callback, object asyncState)
+        {
+            Console.WriteLine("BeginServiceAsyncMethod called with: \"{0}\"", msg);
+            Thread.Sleep(5000);
+            return new CompletedAsyncResult<string>(msg);
+        }
+
+        public string EndAsyncTest(IAsyncResult r)
+        {
+            CompletedAsyncResult<string> result = r as CompletedAsyncResult<string>;
+            Console.WriteLine("EndServiceAsyncMethod called with: \"{0}\"", result.Data);
+            return result.Data;
+        }
+    }
+
+    // Simple async result implementation.
+    class CompletedAsyncResult<T> : IAsyncResult
+    {
+        T data;
+
+        public CompletedAsyncResult(T data)
+        { this.data = data; }
+
+        public T Data
+        { get { return data; } }
+
+        #region IAsyncResult Members
+        public object AsyncState
+        { get { return (object)data; } }
+
+        public WaitHandle AsyncWaitHandle
+        { get { throw new Exception("The method or operation is not implemented."); } }
+
+        public bool CompletedSynchronously
+        { get { return true; } }
+
+        public bool IsCompleted
+        { get { return true; } }
+        #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace WarehouseServer.WarehouseService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WarehouseService.IWarehouseService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WarehouseService.IWarehouseService", CallbackContract=typeof(WarehouseServer.WarehouseService.IWarehouseServiceCallback))]
     public interface IWarehouseService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/GetOpenRequests", ReplyAction="http://tempuri.org/IWarehouseService/GetOpenRequestsResponse")]
@@ -32,6 +32,25 @@ namespace WarehouseServer.WarehouseService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/ShipRequest", ReplyAction="http://tempuri.org/IWarehouseService/ShipRequestResponse")]
         System.Threading.Tasks.Task<int> ShipRequestAsync(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Subscribe", ReplyAction="http://tempuri.org/IWarehouseService/SubscribeResponse")]
+        void Subscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Subscribe", ReplyAction="http://tempuri.org/IWarehouseService/SubscribeResponse")]
+        System.Threading.Tasks.Task SubscribeAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Unsubscribe", ReplyAction="http://tempuri.org/IWarehouseService/UnsubscribeResponse")]
+        void Unsubscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Unsubscribe", ReplyAction="http://tempuri.org/IWarehouseService/UnsubscribeResponse")]
+        System.Threading.Tasks.Task UnsubscribeAsync();
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IWarehouseServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/OnCallback", ReplyAction="http://tempuri.org/IWarehouseService/OnCallbackResponse")]
+        void OnCallback();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -40,25 +59,26 @@ namespace WarehouseServer.WarehouseService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class WarehouseServiceClient : System.ServiceModel.ClientBase<WarehouseServer.WarehouseService.IWarehouseService>, WarehouseServer.WarehouseService.IWarehouseService {
+    public partial class WarehouseServiceClient : System.ServiceModel.DuplexClientBase<WarehouseServer.WarehouseService.IWarehouseService>, WarehouseServer.WarehouseService.IWarehouseService {
         
-        public WarehouseServiceClient() {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public WarehouseServiceClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public WarehouseServiceClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public WarehouseServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public WarehouseServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public System.Data.DataTable GetOpenRequests() {
@@ -83,6 +103,22 @@ namespace WarehouseServer.WarehouseService {
         
         public System.Threading.Tasks.Task<int> ShipRequestAsync(int id) {
             return base.Channel.ShipRequestAsync(id);
+        }
+        
+        public void Subscribe() {
+            base.Channel.Subscribe();
+        }
+        
+        public System.Threading.Tasks.Task SubscribeAsync() {
+            return base.Channel.SubscribeAsync();
+        }
+        
+        public void Unsubscribe() {
+            base.Channel.Unsubscribe();
+        }
+        
+        public System.Threading.Tasks.Task UnsubscribeAsync() {
+            return base.Channel.UnsubscribeAsync();
         }
     }
 }

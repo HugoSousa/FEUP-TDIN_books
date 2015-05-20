@@ -12,7 +12,7 @@ namespace WarehouseGUI.WarehouseService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WarehouseService.IWarehouseService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WarehouseService.IWarehouseService", CallbackContract=typeof(WarehouseGUI.WarehouseService.IWarehouseServiceCallback))]
     public interface IWarehouseService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/GetOpenRequests", ReplyAction="http://tempuri.org/IWarehouseService/GetOpenRequestsResponse")]
@@ -22,16 +22,35 @@ namespace WarehouseGUI.WarehouseService {
         System.Threading.Tasks.Task<System.Data.DataTable> GetOpenRequestsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/AddRequest", ReplyAction="http://tempuri.org/IWarehouseService/AddRequestResponse")]
-        int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received);
+        int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/AddRequest", ReplyAction="http://tempuri.org/IWarehouseService/AddRequestResponse")]
-        System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received);
+        System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/ShipRequest", ReplyAction="http://tempuri.org/IWarehouseService/ShipRequestResponse")]
         int ShipRequest(int id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/ShipRequest", ReplyAction="http://tempuri.org/IWarehouseService/ShipRequestResponse")]
         System.Threading.Tasks.Task<int> ShipRequestAsync(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Subscribe", ReplyAction="http://tempuri.org/IWarehouseService/SubscribeResponse")]
+        void Subscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Subscribe", ReplyAction="http://tempuri.org/IWarehouseService/SubscribeResponse")]
+        System.Threading.Tasks.Task SubscribeAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Unsubscribe", ReplyAction="http://tempuri.org/IWarehouseService/UnsubscribeResponse")]
+        void Unsubscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/Unsubscribe", ReplyAction="http://tempuri.org/IWarehouseService/UnsubscribeResponse")]
+        System.Threading.Tasks.Task UnsubscribeAsync();
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IWarehouseServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWarehouseService/OnCallback", ReplyAction="http://tempuri.org/IWarehouseService/OnCallbackResponse")]
+        void OnCallback();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -40,25 +59,26 @@ namespace WarehouseGUI.WarehouseService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class WarehouseServiceClient : System.ServiceModel.ClientBase<WarehouseGUI.WarehouseService.IWarehouseService>, WarehouseGUI.WarehouseService.IWarehouseService {
+    public partial class WarehouseServiceClient : System.ServiceModel.DuplexClientBase<WarehouseGUI.WarehouseService.IWarehouseService>, WarehouseGUI.WarehouseService.IWarehouseService {
         
-        public WarehouseServiceClient() {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public WarehouseServiceClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public WarehouseServiceClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public WarehouseServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public WarehouseServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public WarehouseServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public System.Data.DataTable GetOpenRequests() {
@@ -69,12 +89,12 @@ namespace WarehouseGUI.WarehouseService {
             return base.Channel.GetOpenRequestsAsync();
         }
         
-        public int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received) {
-            return base.Channel.AddRequest(title, quantity, sent, received);
+        public int AddRequest(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId) {
+            return base.Channel.AddRequest(title, quantity, sent, received, orderId);
         }
         
-        public System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received) {
-            return base.Channel.AddRequestAsync(title, quantity, sent, received);
+        public System.Threading.Tasks.Task<int> AddRequestAsync(string title, int quantity, System.DateTime sent, System.DateTime received, int orderId) {
+            return base.Channel.AddRequestAsync(title, quantity, sent, received, orderId);
         }
         
         public int ShipRequest(int id) {
@@ -83,6 +103,22 @@ namespace WarehouseGUI.WarehouseService {
         
         public System.Threading.Tasks.Task<int> ShipRequestAsync(int id) {
             return base.Channel.ShipRequestAsync(id);
+        }
+        
+        public void Subscribe() {
+            base.Channel.Subscribe();
+        }
+        
+        public System.Threading.Tasks.Task SubscribeAsync() {
+            return base.Channel.SubscribeAsync();
+        }
+        
+        public void Unsubscribe() {
+            base.Channel.Unsubscribe();
+        }
+        
+        public System.Threading.Tasks.Task UnsubscribeAsync() {
+            return base.Channel.UnsubscribeAsync();
         }
     }
 }

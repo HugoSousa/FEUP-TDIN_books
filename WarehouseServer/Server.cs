@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Messaging;
+using System.ServiceModel;
 using OrderStore;
 using WarehouseServer.WarehouseService;
 
@@ -7,8 +8,6 @@ namespace WarehouseServer
 {
     public class Server
     {
-        public event EventHandler NewRequest;
-
         private readonly MessageQueue _warehouseQueue;
         private readonly string _queueName = "warehouse_books";
         private readonly string _machineName = ".";
@@ -20,7 +19,8 @@ namespace WarehouseServer
             _warehouseQueue = new MessageQueue("FormatName:DIRECT=OS:" + _machineName + "\\Private$\\" + _queueName);
             _warehouseQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(BookOrder) });
             _warehouseQueue.MessageReadPropertyFilter.SetAll();
-            _proxy = new WarehouseServiceClient();
+            _proxy = new WarehouseServiceClient(new InstanceContext(new MyServiceCallback()));
+            _proxy.Subscribe();
         }
 
         public void ReadMessage()
@@ -28,13 +28,20 @@ namespace WarehouseServer
             try
             {
                 Message message = _warehouseQueue.Receive();
-                
-                BookOrder body = (BookOrder) message.Body;
 
-                if (message.Label.Equals("StoreRequest"))
+                Console.WriteLine("Got message");
+
+                if (message != null)
                 {
-                    if(_proxy.AddRequest(body.Title, body.Quantity, message.SentTime, message.ArrivedTime, body.OrderId) == 0)
-                        OnNewRequest(null);
+                    BookOrder body = (BookOrder) message.Body;
+
+                    if (message.Label.Equals("StoreRequest"))
+                    {
+                        if (_proxy.AddRequest(body.Title, body.Quantity, message.SentTime, message.ArrivedTime, body.OrderId) == 0)
+                        {
+                            Console.WriteLine("Added Request");
+                        }
+                    }
                 }
             }
             catch (MessageQueueException e)
@@ -56,14 +63,13 @@ namespace WarehouseServer
                 ReadMessage();
             }
         }
+    }
 
-        protected virtual void OnNewRequest(EventArgs e)
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
+    public class MyServiceCallback : IWarehouseServiceCallback
+    {
+        public void OnCallback()
         {
-            EventHandler handler = NewRequest;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
         }
     }
 }
