@@ -83,8 +83,22 @@ namespace OrderStore
 
                     Int32 inserted = (Int32) cmd.ExecuteScalar();
 
-                    if(requestWarehouse)
-                        Warehouse.SendMessage(new BookOrder(title, 10 * quantity, inserted));
+                    if (requestWarehouse)
+                        Warehouse.SendMessage(new BookOrder(title, 10*quantity, inserted));
+                    else
+                    {
+                        string body = "Mr./Ms. " + client + ",<br>" +
+                                      "Your order was succesfully processed and will be dispatched tomorrow.<br><br><br>" +
+                                      "<u>Details</u><br>" +
+                                      "<b>Book Title:</b> " + title + "<br>" +
+                                      "<b>Quantity:</b> " + quantity + "<br>" +
+                                      "<b>Total Price:</b> " + Math.Round(unitPrice * quantity, 2) + "<br>" +
+                                      "<b>State:</b> Dispatched at " + DateTime.Now.AddDays(1).ToString("yyyy-MM-dd") + "<br>" + 
+                                      "<b>Address:</b> " + address +
+                                      "<br><br><br>" +
+                                      "Thanks for choosing our store!";
+                        SendEmail(email, "[TDIN_bookstore] Order " + inserted + " dispatching", body);
+                    }
 
                     return inserted;
                 }
@@ -253,7 +267,7 @@ namespace OrderStore
                     {
                         c.Open();
                         string sql =
-                            "select id, quantity, book, address, email, state, total_price from [Order] where book = @book and state = 'W' order by order_date;";
+                            "select id, quantity, book, address, email, state, total_price, client_name from [Order] where book = @book and state = 'W' order by order_date;";
                         SqlCommand cmd = new SqlCommand(sql, c);
                         cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
                         SqlDataReader reader = cmd.ExecuteReader();
@@ -266,15 +280,30 @@ namespace OrderStore
                                     break;
 
                                 int orderQuantity = reader.GetInt32(1);
+                                string client = reader.GetString(7);
+                                float totalPrice = reader.GetFloat(6);
+                                string address = reader.GetString(3);
+                                string email = reader.GetString(4);
+                                int orderId = reader.GetInt32(0);
 
                                 if (orderQuantity <= newStock)
                                 {
                                     //change order state to D and actual date
                                     //send email to this user
                                     ChangeOrderState(reader.GetInt32(0), 'D', DateTime.Now.ToString("yyyy-MM-dd"));
-                                    //SendEmail(reader.GetString(4), "Order Dispatch", "blabla");
 
-                                    //update book stock (recursively)
+                                    string body = "Mr./Ms. " + client + ",<br>" +
+                                                  "Our stock has been updated and your order has been succesfully processed and will be dispatched today.<br><br><br>" +
+                                                  "<u>Details</u><br>" +
+                                                  "<b>Book Title:</b> " + title + "<br>" +
+                                                  "<b>Quantity:</b> " + quantity + "<br>" +
+                                                  "<b>Total Price:</b> " + Math.Round(totalPrice, 2) + "<br>" +
+                                                  "<b>State:</b> Dispatched at " + DateTime.Now.ToString("yyyy-MM-dd") + "<br>" +
+                                                  "<b>Address:</b> " + address +
+                                                  "<br><br><br>" +
+                                                  "Thanks for choosing our store!";
+                                    SendEmail(email, "[TDIN_bookstore] Order " + orderId + " dispatching", body);
+
                                     UpdateStock(title, 0 - orderQuantity);
 
                                     newStock -= orderQuantity;
@@ -327,16 +356,16 @@ namespace OrderStore
 
         private int SendEmail(string to, string subject, string body)
         {
-            MailMessage mail = new MailMessage();
+            MailMessage mail = new MailMessage {IsBodyHtml = true};
             SmtpClient client = new SmtpClient
             {
                 Port = 25,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Host = "smtp.gmail.com" //TODO change
+                Host = "smtp.fe.up.pt"
             };
             mail.To.Add(new MailAddress(to));
-            mail.From = new MailAddress("you@yourcompany.com");
+            mail.From = new MailAddress("orders@tdin_bookstore.com");
             mail.Subject = subject;
             mail.Body = body;
             client.Send(mail);
@@ -372,11 +401,6 @@ namespace OrderStore
 
             return result;
         }
-
-        private void checkMessageQueue()
-        {
-        }
-
 
         public DataTable GetBooks()
         {
