@@ -97,7 +97,14 @@ namespace OrderStore
                                       "<b>Address:</b> " + address +
                                       "<br><br><br>" +
                                       "Thanks for choosing our store!";
-                        SendEmail(email, "[TDIN_bookstore] Order " + inserted + " dispatching", body);
+                        try
+                        {
+                            SendEmail(email, "[TDIN_bookstore] Order " + inserted + " dispatching", body);
+                        }
+                        catch (Exception)
+                        {
+                            
+                        }
                     }
 
                     return inserted;
@@ -302,7 +309,14 @@ namespace OrderStore
                                                   "<b>Address:</b> " + address +
                                                   "<br><br><br>" +
                                                   "Thanks for choosing our store!";
-                                    SendEmail(email, "[TDIN_bookstore] Order " + orderId + " dispatching", body);
+                                    try
+                                    {
+                                        SendEmail(email, "[TDIN_bookstore] Order " + orderId + " dispatching", body);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        
+                                    }
 
                                     UpdateStock(title, 0 - orderQuantity);
 

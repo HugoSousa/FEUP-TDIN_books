@@ -63,6 +63,11 @@ namespace WarehouseServer
                 ReadMessage();
             }
         }
+
+        public void Unsubscribe()
+        {
+            _proxy.Unsubscribe();
+        }
     }
 
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]

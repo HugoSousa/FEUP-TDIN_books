@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using System.Windows;
 using WarehouseGUI.WarehouseService;
-using WarehouseService;
 
 namespace WarehouseGUI
 {
@@ -44,16 +43,6 @@ namespace WarehouseGUI
             _proxy = new WarehouseServiceClient(instanceContext);
             _proxy.Subscribe();
             _requests = _proxy.GetOpenRequests();
-            //_proxy.AddRequest("a", 1, DateTime.Now, DateTime.Now, 1);
-            
-            /*
-            Server server = new Server();
-            Task.Run(() =>
-            {
-                server.Run();
-            });
-            server.NewRequest += RequestAdded;
-             */
 
             RequestsList.ItemsSource = _requests.DefaultView;
         }
@@ -91,6 +80,11 @@ namespace WarehouseGUI
         {
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        ~MainWindow()
+        {
+            _proxy.Unsubscribe();
         }
     }
 
