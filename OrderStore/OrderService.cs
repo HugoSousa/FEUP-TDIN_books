@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net.Mail;
+using System.ServiceModel;
 
 namespace OrderStore
 {
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single, UseSynchronizationContext = false)]
     public class OrderService : IOrderService
     {
+        private List<PrinterCallback> _subscribers = new List<PrinterCallback>();
+        private readonly object _locker = new object();
 
         //return -1 if the book title doesn't exist
         //return -2 if other sql error
@@ -214,13 +220,14 @@ namespace OrderStore
                     cmd.Parameters.Add("@client", SqlDbType.NVarChar, 80).Value = client;
                     cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
                     cmd.Parameters.Add("@quantity", SqlDbType.Int).Value = quantity;
-                    cmd.Parameters.Add("@total_price", SqlDbType.NVarChar, 50).Value = quantity*unitPrice;
+                    cmd.Parameters.Add("@total_price", SqlDbType.Real).Value = Math.Round(quantity*unitPrice, 2);
                     cmd.ExecuteNonQuery();
 
                     UpdateStock(title, 0 - quantity);
                 }
-                catch (SqlException)
+                catch (SqlException e)
                 {
+                    Console.WriteLine(e);
                     return -2;
                 }
                 finally
@@ -230,6 +237,12 @@ namespace OrderStore
             }
 
             //TODO: print a receipt (separate application?)
+            foreach (var subscriber in _subscribers)
+            {
+                var callbackComm = (ICommunicationObject)subscriber.Callback;
+                if (callbackComm.State == CommunicationState.Opened)
+                    subscriber.Callback.OnSuccessfullSell();
+            }
 
             return 0;
         }
@@ -251,6 +264,7 @@ namespace OrderStore
                     cmd.Parameters.Add("@quantity", SqlDbType.Int).Value = quantity;
                     cmd.Parameters.Add("@title", SqlDbType.NVarChar, 50).Value = title;
                     cmd.ExecuteNonQuery();
+
                 }
                 catch (SqlException)
                 {
@@ -264,6 +278,14 @@ namespace OrderStore
 
             if (quantity > 0) //if increment of stock
             {
+                //only notify if stock was added. If was reduced, means it was a sell and GUI was already updated on sell callback
+                foreach (var subscriber in _subscribers)
+                {
+                    var callbackComm = (ICommunicationObject)subscriber.Callback;
+                    if (callbackComm.State == CommunicationState.Opened)
+                        subscriber.Callback.OnSucessfullStockUpdate();
+                }
+
                 // cover pending orders with the new stock (Update state to 'D' at actual date)
                 // send email
                 using (
@@ -317,6 +339,7 @@ namespace OrderStore
                                     {
                                         
                                     }
+
 
                                     UpdateStock(title, 0 - orderQuantity);
 
@@ -448,5 +471,50 @@ namespace OrderStore
         {
             Warehouse.SendMessage(new BookOrder("tituloteste", 10, 1));
         }
+
+        public void Subscribe(string printer)
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<IStoreCallback>();
+                lock (_locker)
+                {
+                    if (! _subscribers.Any(p => p.Callback == callback))
+                    {
+                        _subscribers.Add(new PrinterCallback()
+                        {
+                            Callback = callback,
+                            Printer = printer
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        public void Unsubscribe()
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<IStoreCallback>();
+                lock (_locker)
+                {
+                    _subscribers.RemoveAll(x => x.Callback == callback);
+                }
+
+            }
+            catch (Exception e)
+            {
+            }
+        }
+    }
+
+    public class PrinterCallback 
+    {
+        public string Printer { get; set; } //if null, it's not a printer
+        public IStoreCallback Callback { get; set; }
     }
 }

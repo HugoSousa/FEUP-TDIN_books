@@ -20,7 +20,7 @@ namespace WarehouseServer
             _warehouseQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(BookOrder) });
             _warehouseQueue.MessageReadPropertyFilter.SetAll();
             _proxy = new WarehouseServiceClient(new InstanceContext(new MyServiceCallback()));
-            _proxy.Subscribe();
+            //_proxy.Subscribe();
         }
 
         public void ReadMessage()

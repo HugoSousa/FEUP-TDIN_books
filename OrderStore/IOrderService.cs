@@ -4,7 +4,7 @@ using System.ServiceModel;
 
 namespace OrderStore
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract=typeof(IStoreCallback))]
     public interface IOrderService
     {
         [OperationContract]
@@ -30,5 +30,11 @@ namespace OrderStore
 
         [OperationContract]
         void TestMSMQ(string body);
+
+        [OperationContract]
+        void Subscribe(string printer);
+
+        [OperationContract]
+        void Unsubscribe();
     }
 }

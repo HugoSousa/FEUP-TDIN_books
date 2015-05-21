@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.ServiceModel;
 using System.Windows;
-using System.Windows.Data;
 using StoreGUI.OrderStore;
 
 namespace StoreGUI
@@ -53,7 +53,10 @@ namespace StoreGUI
 
         public MainWindow()
         {
-            _proxy = new OrderServiceClient();
+            OrderCallback callback = new OrderCallback(this);
+            InstanceContext instanceContext = new InstanceContext(callback);
+            _proxy = new OrderServiceClient(instanceContext);
+            _proxy.Subscribe(null);
             InitializeComponent();
             DataContext = this;
             _books = _proxy.GetBooks();
@@ -96,7 +99,7 @@ namespace StoreGUI
             if (_proxy.StoreSell(title, client, quantity) == 0)
             {
                 ErrorSell = "Sell successfull. The receipt has been printed.";
-                RefreshBooksList(null, null);
+                //RefreshBooksList(null, null);
             }
             else
                 ErrorSell = "There was some error processing the sell.";
@@ -163,11 +166,35 @@ namespace StoreGUI
             }
         }
 
-        private void RefreshBooksList(object sender, RoutedEventArgs e)
+        public void RefreshBooksList(object sender, RoutedEventArgs e)
         {
-            _books = _proxy.GetBooks();
-            BooksListSell.ItemsSource = _books.DefaultView;
-            BooksListStock.ItemsSource = _books.DefaultView;
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                _books = _proxy.GetBooks();
+                BooksListSell.ItemsSource = _books.DefaultView;
+                BooksListStock.ItemsSource = _books.DefaultView;
+            }));
+        }
+    }
+
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
+    public class OrderCallback : IOrderServiceCallback
+    {
+        private readonly MainWindow _gui;
+
+        public OrderCallback(MainWindow gui)
+        {
+            _gui = gui;
+        }
+
+        public void OnSuccessfullSell()
+        {
+            _gui.RefreshBooksList(null, null);
+        }
+
+        public void OnSucessfullStockUpdate()
+        {
+            _gui.RefreshBooksList(null, null);
         }
     }
 }

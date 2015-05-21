@@ -12,7 +12,7 @@ namespace StoreGUI.OrderStore {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="OrderStore.IOrderService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="OrderStore.IOrderService", CallbackContract=typeof(StoreGUI.OrderStore.IOrderServiceCallback))]
     public interface IOrderService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/CreateOrder", ReplyAction="http://tempuri.org/IOrderService/CreateOrderResponse")]
@@ -56,6 +56,34 @@ namespace StoreGUI.OrderStore {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/GetBooks", ReplyAction="http://tempuri.org/IOrderService/GetBooksResponse")]
         System.Threading.Tasks.Task<System.Data.DataTable> GetBooksAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/TestMSMQ", ReplyAction="http://tempuri.org/IOrderService/TestMSMQResponse")]
+        void TestMSMQ(string body);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/TestMSMQ", ReplyAction="http://tempuri.org/IOrderService/TestMSMQResponse")]
+        System.Threading.Tasks.Task TestMSMQAsync(string body);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/Subscribe", ReplyAction="http://tempuri.org/IOrderService/SubscribeResponse")]
+        void Subscribe(string printer);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/Subscribe", ReplyAction="http://tempuri.org/IOrderService/SubscribeResponse")]
+        System.Threading.Tasks.Task SubscribeAsync(string printer);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/Unsubscribe", ReplyAction="http://tempuri.org/IOrderService/UnsubscribeResponse")]
+        void Unsubscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/Unsubscribe", ReplyAction="http://tempuri.org/IOrderService/UnsubscribeResponse")]
+        System.Threading.Tasks.Task UnsubscribeAsync();
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IOrderServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IOrderService/OnSuccessfullSell")]
+        void OnSuccessfullSell();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IOrderService/OnSucessfullStockUpdate")]
+        void OnSucessfullStockUpdate();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -64,25 +92,26 @@ namespace StoreGUI.OrderStore {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class OrderServiceClient : System.ServiceModel.ClientBase<StoreGUI.OrderStore.IOrderService>, StoreGUI.OrderStore.IOrderService {
+    public partial class OrderServiceClient : System.ServiceModel.DuplexClientBase<StoreGUI.OrderStore.IOrderService>, StoreGUI.OrderStore.IOrderService {
         
-        public OrderServiceClient() {
+        public OrderServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public OrderServiceClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public OrderServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public OrderServiceClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public OrderServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public OrderServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public OrderServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public OrderServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public OrderServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public int CreateOrder(string title, string client, string email, string address, int quantity) {
@@ -139,6 +168,30 @@ namespace StoreGUI.OrderStore {
         
         public System.Threading.Tasks.Task<System.Data.DataTable> GetBooksAsync() {
             return base.Channel.GetBooksAsync();
+        }
+        
+        public void TestMSMQ(string body) {
+            base.Channel.TestMSMQ(body);
+        }
+        
+        public System.Threading.Tasks.Task TestMSMQAsync(string body) {
+            return base.Channel.TestMSMQAsync(body);
+        }
+        
+        public void Subscribe(string printer) {
+            base.Channel.Subscribe(printer);
+        }
+        
+        public System.Threading.Tasks.Task SubscribeAsync(string printer) {
+            return base.Channel.SubscribeAsync(printer);
+        }
+        
+        public void Unsubscribe() {
+            base.Channel.Unsubscribe();
+        }
+        
+        public System.Threading.Tasks.Task UnsubscribeAsync() {
+            return base.Channel.UnsubscribeAsync();
         }
     }
 }

@@ -11,7 +11,7 @@ using WarehouseService.StoreService;
 namespace WarehouseService
 {
     // NOTE: In order to launch WCF Test Client for testing this service, please select WarehouseServ.svc or WarehouseServ.svc.cs at the Solution Explorer and start debugging.
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode=InstanceContextMode.Single)]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.Single)]
     public class WarehouseServ : IWarehouseService
     {
         //public static IMyServiceCallback Callback;
@@ -74,7 +74,6 @@ namespace WarehouseService
                 }
             }
 
-            IMyServiceCallback Callback = OperationContext.Current.GetCallbackChannel<IMyServiceCallback>();
             foreach (var subscriber in _subscribers)
             {
                 var callbackComm = (ICommunicationObject)subscriber;
@@ -82,7 +81,6 @@ namespace WarehouseService
                     subscriber.OnCallback();
             }
             
-
             return 0;
         }
 
@@ -102,7 +100,7 @@ namespace WarehouseService
                     cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
                     int orderId = (Int32)cmd.ExecuteScalar();
                     {
-                        serviceStore.ChangeOrderState(orderId, 'W', DateTime.Now.AddDays(2).ToString("yyyy-MM-dd"));
+                        serviceStore.ChangeOrderState(orderId, 'S', DateTime.Now.AddDays(2).ToString("yyyy-MM-dd"));
                     }
                 }
                 catch (SqlException e)
@@ -127,7 +125,10 @@ namespace WarehouseService
                 var callback = OperationContext.Current.GetCallbackChannel<IMyServiceCallback>();
                 lock (_locker)
                 {
-                    _subscribers.Add(callback);
+                    if (!_subscribers.Contains(callback))
+                    {
+                        _subscribers.Add(callback);
+                    }
                 }
             }
             catch (Exception e)
