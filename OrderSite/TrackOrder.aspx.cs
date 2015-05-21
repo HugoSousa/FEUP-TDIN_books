@@ -13,7 +13,7 @@ public partial class TrackOrder : System.Web.UI.Page
     protected void GetOrder_Click(object sender, EventArgs e)
     {
         ClearFields();
-
+        //TODO try catch
         DataTable dt = _proxy.GetOrder(Convert.ToInt32(OrderCode.Text));
 
         if (dt.Rows.Count > 0)
@@ -34,7 +34,9 @@ public partial class TrackOrder : System.Web.UI.Page
                 case "D":
                     OrderState.Text = "Dispatched at " + dt.Rows[0]["state_date"].ToString().Split(null)[0];
                     break;
-                //TODO outro state?
+                case "S":
+                    OrderState.Text = "Dispatch should occur at " + dt.Rows[0]["state_date"].ToString().Split(null)[0];
+                    break;
             }
         }
         else
@@ -55,7 +57,6 @@ public partial class TrackOrder : System.Web.UI.Page
         OrderAddress.Text = "";
         OrderEmail.Text = "";
         OrderState.Text = "";
-        OrderDate.Text = "";
     }
 
 }
