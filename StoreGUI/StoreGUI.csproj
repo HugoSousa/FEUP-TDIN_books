@@ -59,6 +59,7 @@
     <Compile Include="PrintersWindow.xaml.cs">
       <DependentUpon>PrintersWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Service References\OrderStore\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

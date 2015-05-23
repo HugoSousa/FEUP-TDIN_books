@@ -233,8 +233,5 @@ namespace StoreGUI
         {
             
         }
-
-        public void OnPrint()
-        {}
     }
 }
