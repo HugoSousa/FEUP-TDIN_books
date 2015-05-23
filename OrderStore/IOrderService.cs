@@ -36,5 +36,11 @@ namespace OrderStore
 
         [OperationContract]
         void Unsubscribe();
+
+        [OperationContract]
+        void PrintReceipt(string printer, Receipt receipt);
+
+        [OperationContract]
+        List<string> GetAvailablePrinters();
     }
 }

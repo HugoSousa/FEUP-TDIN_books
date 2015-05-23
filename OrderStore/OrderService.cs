@@ -189,7 +189,7 @@ namespace OrderStore
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (!reader.HasRows)
                     {
-                        return -3;
+                        return -2;
                     }
                     else
                     {
@@ -236,17 +236,38 @@ namespace OrderStore
                 }
             }
 
+            List<string> printers = new List<string>();
             //TODO: print a receipt (separate application?)
             foreach (var subscriber in _subscribers)
             {
                 var callbackComm = (ICommunicationObject)subscriber.Callback;
                 if (callbackComm.State == CommunicationState.Opened)
-                    subscriber.Callback.OnSuccessfullSell();
+                {
+                    if (subscriber.Printer == null)
+                    {
+                        subscriber.Callback.OnSuccessfullSell();
+                    }
+                    else
+                    {
+                        printers.Add(subscriber.Printer);
+                    }
+                }
             }
 
             return 0;
         }
 
+        public void PrintReceipt(string printer, Receipt receipt)
+        {
+            foreach (var subscriber in _subscribers)
+            {
+                var callbackComm = (ICommunicationObject)subscriber.Callback;
+                if (callbackComm.State == CommunicationState.Opened && subscriber.Printer != null && subscriber.Printer.Equals(printer))
+                {
+                    subscriber.Callback.OnPrint(receipt);
+                }
+            }
+        }
 
         public int UpdateStock(string title, int quantity)
         {
@@ -510,6 +531,22 @@ namespace OrderStore
             {
             }
         }
+
+        public List<string> GetAvailablePrinters()
+        {
+            List<string> printers = new List<string>();
+
+            foreach (var subscriber in _subscribers)
+            {
+                var callbackComm = (ICommunicationObject)subscriber.Callback;
+                if (callbackComm.State == CommunicationState.Opened && subscriber.Printer != null)
+                {
+                    printers.Add(subscriber.Printer);
+                }
+            }
+
+            return printers;
+        } 
     }
 
     public class PrinterCallback 

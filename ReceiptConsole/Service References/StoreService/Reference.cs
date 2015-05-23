@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace StoreGUI.OrderStore {
+namespace ReceiptConsole.StoreService {
     using System.Runtime.Serialization;
     using System;
     
@@ -107,7 +107,7 @@ namespace StoreGUI.OrderStore {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="OrderStore.IOrderService", CallbackContract=typeof(StoreGUI.OrderStore.IOrderServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="StoreService.IOrderService", CallbackContract=typeof(ReceiptConsole.StoreService.IOrderServiceCallback))]
     public interface IOrderService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/CreateOrder", ReplyAction="http://tempuri.org/IOrderService/CreateOrderResponse")]
@@ -171,10 +171,10 @@ namespace StoreGUI.OrderStore {
         System.Threading.Tasks.Task UnsubscribeAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/PrintReceipt", ReplyAction="http://tempuri.org/IOrderService/PrintReceiptResponse")]
-        void PrintReceipt(string printer, StoreGUI.OrderStore.Receipt receipt);
+        void PrintReceipt(string printer, ReceiptConsole.StoreService.Receipt receipt);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/PrintReceipt", ReplyAction="http://tempuri.org/IOrderService/PrintReceiptResponse")]
-        System.Threading.Tasks.Task PrintReceiptAsync(string printer, StoreGUI.OrderStore.Receipt receipt);
+        System.Threading.Tasks.Task PrintReceiptAsync(string printer, ReceiptConsole.StoreService.Receipt receipt);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IOrderService/GetAvailablePrinters", ReplyAction="http://tempuri.org/IOrderService/GetAvailablePrintersResponse")]
         string[] GetAvailablePrinters();
@@ -193,16 +193,16 @@ namespace StoreGUI.OrderStore {
         void OnSucessfullStockUpdate();
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IOrderService/OnPrint")]
-        void OnPrint(StoreGUI.OrderStore.Receipt receipt);
+        void OnPrint(ReceiptConsole.StoreService.Receipt receipt);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IOrderServiceChannel : StoreGUI.OrderStore.IOrderService, System.ServiceModel.IClientChannel {
+    public interface IOrderServiceChannel : ReceiptConsole.StoreService.IOrderService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class OrderServiceClient : System.ServiceModel.DuplexClientBase<StoreGUI.OrderStore.IOrderService>, StoreGUI.OrderStore.IOrderService {
+    public partial class OrderServiceClient : System.ServiceModel.DuplexClientBase<ReceiptConsole.StoreService.IOrderService>, ReceiptConsole.StoreService.IOrderService {
         
         public OrderServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
@@ -304,11 +304,11 @@ namespace StoreGUI.OrderStore {
             return base.Channel.UnsubscribeAsync();
         }
         
-        public void PrintReceipt(string printer, StoreGUI.OrderStore.Receipt receipt) {
+        public void PrintReceipt(string printer, ReceiptConsole.StoreService.Receipt receipt) {
             base.Channel.PrintReceipt(printer, receipt);
         }
         
-        public System.Threading.Tasks.Task PrintReceiptAsync(string printer, StoreGUI.OrderStore.Receipt receipt) {
+        public System.Threading.Tasks.Task PrintReceiptAsync(string printer, ReceiptConsole.StoreService.Receipt receipt) {
             return base.Channel.PrintReceiptAsync(printer, receipt);
         }
         

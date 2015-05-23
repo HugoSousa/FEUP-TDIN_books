@@ -14,5 +14,8 @@ namespace OrderStore
 
         [OperationContract(IsOneWay = true)]
         void OnSucessfullStockUpdate();
+
+        [OperationContract(IsOneWay = true)]
+        void OnPrint(Receipt receipt);
     }
 }

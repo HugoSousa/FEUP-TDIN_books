@@ -51,6 +51,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseService", "Warehou
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptConsole", "ReceiptConsole\ReceiptConsole.csproj", "{B9D6E94A-ED31-434A-8C5C-85EC796BD8B5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2} = {C6C1ED8E-512A-499E-975D-E8A3ED7E4AF2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using System.Windows;
@@ -96,10 +98,40 @@ namespace StoreGUI
                 return;
             }
 
+            
             if (_proxy.StoreSell(title, client, quantity) == 0)
             {
-                ErrorSell = "Sell successfull. The receipt has been printed.";
-                //RefreshBooksList(null, null);
+                List<string> availablePrinters = _proxy.GetAvailablePrinters().ToList();
+
+                if (availablePrinters.Count > 0)
+                {
+                    PrintersWindow pw = new PrintersWindow(availablePrinters);
+                    pw.Owner = this;
+                    pw.ShowDialog();
+                    if (pw.DialogResult == true && pw.SelectedPrinter != null)
+                    {
+                        UpdatePrice(null, null); //ensure the price is updated
+                        Receipt receipt = new Receipt()
+                        {
+                            Client = client,
+                            Title = title,
+                            Quantity = quantity,
+                            TotalPrice = Double.Parse(PriceOutput.Text, CultureInfo.InvariantCulture)
+                        };
+                        _proxy.PrintReceipt(pw.SelectedPrinter, receipt);
+                        ErrorSell = "Sell successfull. The receipt has been printed on " + pw.SelectedPrinter + ".";
+                    }
+                    else
+                    {
+                        ErrorSell = "Sell successfull. No printing processed.";
+                    }
+                }
+                else
+                {
+                    ErrorSell = "Sell successfull. There are no available printers.";
+                }
+                
+                RefreshBooksList(null, null);
             }
             else
                 ErrorSell = "There was some error processing the sell.";
@@ -196,5 +228,13 @@ namespace StoreGUI
         {
             _gui.RefreshBooksList(null, null);
         }
+
+        public void OnPrint(Receipt receipt)
+        {
+            
+        }
+
+        public void OnPrint()
+        {}
     }
 }
