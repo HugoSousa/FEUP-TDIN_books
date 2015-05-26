@@ -15,9 +15,9 @@ namespace OrderStore
         private List<PrinterCallback> _subscribers = new List<PrinterCallback>();
         private readonly object _locker = new object();
 
+        //returns the id of inserted order
         //return -1 if the book title doesn't exist
         //return -2 if other sql error
-        //Order from the Web! 
         public int CreateOrder(string title, string client, string email, string address, int quantity)
         {
             int stock;
@@ -90,7 +90,9 @@ namespace OrderStore
                     Int32 inserted = (Int32) cmd.ExecuteScalar();
 
                     if (requestWarehouse)
+                    {
                         Warehouse.SendMessage(new BookOrder(title, 10*quantity, inserted));
+                    }
                     else
                     {
                         string body = "Mr./Ms. " + client + ",<br>" +
@@ -98,8 +100,9 @@ namespace OrderStore
                                       "<u>Details</u><br>" +
                                       "<b>Book Title:</b> " + title + "<br>" +
                                       "<b>Quantity:</b> " + quantity + "<br>" +
-                                      "<b>Total Price:</b> " + Math.Round(unitPrice * quantity, 2) + "<br>" +
-                                      "<b>State:</b> Dispatched at " + DateTime.Now.AddDays(1).ToString("yyyy-MM-dd") + "<br>" + 
+                                      "<b>Total Price:</b> " + Math.Round(unitPrice*quantity, 2) + "<br>" +
+                                      "<b>State:</b> Dispatched at " + DateTime.Now.AddDays(1).ToString("yyyy-MM-dd") +
+                                      "<br>" +
                                       "<b>Address:</b> " + address +
                                       "<br><br><br>" +
                                       "Thanks for choosing our store!";
@@ -109,7 +112,7 @@ namespace OrderStore
                         }
                         catch (Exception)
                         {
-                            
+
                         }
                     }
 
@@ -124,8 +127,6 @@ namespace OrderStore
                     c.Close();
                 }
             }
-
-            return 0;
         }
 
         public int GetStock(string title)
@@ -236,7 +237,6 @@ namespace OrderStore
                 }
             }
 
-            List<string> printers = new List<string>();
             //TODO: print a receipt (separate application?)
             foreach (var subscriber in _subscribers)
             {
@@ -246,10 +246,6 @@ namespace OrderStore
                     if (subscriber.Printer == null)
                     {
                         subscriber.Callback.OnSuccessfullSell();
-                    }
-                    else
-                    {
-                        printers.Add(subscriber.Printer);
                     }
                 }
             }

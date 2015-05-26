@@ -40,7 +40,6 @@
                     </ListView>
 
                     <StackPanel Width="500"  HorizontalAlignment="Center" Grid.Row="1">
-                        <Button Content="Refresh" Width="50" Margin="0,5,0,0"  HorizontalAlignment="Right" Click="RefreshBooksList"></Button>
                         <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right" >
                             <Label Content="Client Name:"  />
                             <TextBox Name="ClientInput" Width="350" VerticalAlignment="Center"/>
@@ -96,7 +95,6 @@
                         </ListView.View>
                     </ListView>
                     <StackPanel Width="500"  HorizontalAlignment="Center" Grid.Row="1">
-                        <Button Content="Refresh" Width="50" Margin="0,5,0,0"  HorizontalAlignment="Right" Click="RefreshBooksList"></Button>
                         <StackPanel Orientation="Horizontal" Margin="0,25,0,0" HorizontalAlignment="Center">
                             <Label Content="Quantity:"/>
                             <TextBox Name="QuantityInputStock" Width="120" VerticalAlignment="Center"/>

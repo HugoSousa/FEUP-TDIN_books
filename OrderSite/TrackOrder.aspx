@@ -36,7 +36,7 @@
 
         <br />
         <br />
-
+        <!--
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-default">
@@ -100,6 +100,7 @@
                 </div>
             </div>
         </div>
+            -->
 
         <div style="margin: 0 auto; text-align: center">
             <br />

@@ -98,8 +98,8 @@ namespace StoreGUI
                 return;
             }
 
-            
-            if (_proxy.StoreSell(title, client, quantity) == 0)
+            int sellResult = _proxy.StoreSell(title, client, quantity);
+            if (sellResult == 0)
             {
                 List<string> availablePrinters = _proxy.GetAvailablePrinters().ToList();
 
@@ -133,9 +133,33 @@ namespace StoreGUI
                 
                 RefreshBooksList(null, null);
             }
+            else if (sellResult == -1)
+            {
+                //create an order
+                OrderDataWindow odw = new OrderDataWindow();
+                odw.Owner = this;
+                odw.ShowDialog();
+                if (odw.DialogResult == true)
+                {
+                    int insertedOrder = _proxy.CreateOrder(title, client, odw.Email, odw.Address, quantity);
+                    if (insertedOrder > 0)
+                    {
+                        ErrorSell = "Order sucessfull sent to the warehouse. Order id: " + insertedOrder;
+                    }
+                    else
+                    {
+                        ErrorSell = "Some error ocurred creating an order.";
+                    }
+                }
+                else
+                {
+                    ErrorSell = "Order of book cancelled.";
+                }  
+            }
             else
+            {
                 ErrorSell = "There was some error processing the sell.";
-
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
