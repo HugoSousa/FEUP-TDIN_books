@@ -11,7 +11,9 @@ public partial class TrackOrder : System.Web.UI.Page
     }
 
     protected void GetOrder_Click(object sender, EventArgs e)
-    {
+    {   
+        OrderInfo.Attributes.Add("style", "display:none");
+        
         ClearFields();
         int code;
         if (Int32.TryParse(OrderCode.Text, out code))
@@ -41,6 +43,8 @@ public partial class TrackOrder : System.Web.UI.Page
                                           dt.Rows[0]["state_date"].ToString().Split(null)[0];
                         break;
                 }
+
+                OrderInfo.Attributes.Add("style", "display:block");
             }
             else
             {
@@ -52,6 +56,7 @@ public partial class TrackOrder : System.Web.UI.Page
         {
             ErrorInfo.Text = "Invalid order id";
         }
+        
         
     }
 

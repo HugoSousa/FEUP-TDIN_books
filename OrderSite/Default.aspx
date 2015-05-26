@@ -69,14 +69,6 @@
                 </div>
             </div>
 
-            <!--
-        <asp:Button runat="server" ID="New" Text="Check Selected Index" OnClick="CheckSelectedIndex_OnClick_"/>
-        <asp:Button runat="server" ID="CreateOrderButton" Text="Create an Order" OnClick="CreateOrderButton_OnClick_"/>
-        <asp:Button runat="server" ID="Button1" Text="Test1" OnClick="Button1_OnClick_"/>
-        <asp:Button runat="server" ID="Button2" Text="Test2" OnClick="Button2_OnClick_"/>
-        <asp:Button runat="server" ID="Button3" Text="Test3" OnClick="Button3_OnClick_"/>
-        -->
-
             <br />
 
             <div class="row">

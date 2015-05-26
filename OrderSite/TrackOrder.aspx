@@ -36,8 +36,8 @@
 
         <br />
         <br />
-        <!--
-        <div class="row">
+        
+        <div runat="server" class="row" ID="OrderInfo" style="display:none">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -100,7 +100,7 @@
                 </div>
             </div>
         </div>
-            -->
+            
 
         <div style="margin: 0 auto; text-align: center">
             <br />

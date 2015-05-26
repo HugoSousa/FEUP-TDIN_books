@@ -45,34 +45,6 @@ public partial class _Default : Page
         }
     }
 
-    protected void CheckSelectedIndex_OnClick_(object sender, EventArgs e)
-    {
-        int a = GridView1.SelectedIndex;
-        string c = GridView1.Rows[GridView1.SelectedIndex].Cells[1].Text; //titulo
-
-    }
-
-    protected void CreateOrderButton_OnClick_(object sender, EventArgs e)
-    {
-        _proxy.CreateOrder("Titulo1", "Cliente 1", "email 1", "address teste", 2);
-    }
-
-    protected void Button1_OnClick_(object sender, EventArgs e)
-    {
-        _proxy.GetStock("Titulo1");
-    }
-
-    protected void Button2_OnClick_(object sender, EventArgs e)
-    {
-        _proxy.StoreSell("Titulo1", "cliente", 2);
-    }
-
-    protected void Button3_OnClick_(object sender, EventArgs e)
-    {
-        _proxy.UpdateStock("Titulo1", 2);
-        //_proxy.ChangeOrderState(2, 'D', DateTime.Now.ToString("yyyy-MM-dd"));
-    }
-
     protected void OrderItem_OnClick_(object sender, EventArgs e)
     {
         ErrorLabel.Text = "";
