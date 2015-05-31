@@ -4,7 +4,7 @@
         Title="MainWindow" Height="420" Width="680" MinHeight="400" MinWidth="680">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <ListView Name="RequestsList" HorizontalAlignment="Center" Margin="0,20,0,0" Width="650" Grid.Row="0">
