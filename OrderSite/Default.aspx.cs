@@ -12,11 +12,10 @@ public partial class _Default : Page
     protected void Page_Load(object sender, EventArgs e)
     {
         _proxy = new OrderServiceClient();
-    }
-
-    protected void RefreshGUI()
-    {
-        Response.Redirect(Request.RawUrl);
+        if (Session["Error"] != null)
+        {
+            ErrorLabel.Text = Session["Error"].ToString();
+        }
     }
 
     protected override void Render(HtmlTextWriter writer)
@@ -88,8 +87,9 @@ public partial class _Default : Page
                     int id = _proxy.CreateOrder(title, client, email, address, quantity);
                     if (id > 0)
                     {
-                        ErrorLabel.Text = "Order successfully created. The id of your order is " + id + ".\n Click below to check its state.";
-                        RefreshGUI();
+
+                        Session["Error"] = "Order successfully created. The id of your order is " + id + ".\n Click below to check its state.";
+                        Response.Redirect(Request.RawUrl);
                     }
                 }
             }
