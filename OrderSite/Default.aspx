@@ -87,11 +87,6 @@
                         <div class="btn-group" role="group">
                             <asp:Button runat="server" class="btn btn-default" ID="Order" Text="Order Item" OnClick="OrderItem_OnClick_" />
                         </div>
-                        <!--
-                        <div class="btn-group" role="group">
-                            <asp:Button runat="server" class="btn btn-default" ID="ButtonTeste" Text="Test MSMQ" OnClick="Test" />
-                        </div>
-                        -->
                     </div>
                 </div>
             </div>

@@ -14,6 +14,11 @@ public partial class _Default : Page
         _proxy = new OrderServiceClient();
     }
 
+    protected void RefreshGUI()
+    {
+        Response.Redirect(Request.RawUrl);
+    }
+
     protected override void Render(HtmlTextWriter writer)
     {
         foreach (GridViewRow r in GridView1.Rows)
@@ -24,7 +29,6 @@ public partial class _Default : Page
                 r.Attributes["onmouseout"] = "this.style.textDecoration='none';this.style.color='black'";
                 r.ToolTip = "Click to select this book";
                 r.Attributes["onclick"] = this.Page.ClientScript.GetPostBackClientHyperlink(this.GridView1, "Select$" + r.RowIndex);
-
             }
         }
 
@@ -84,7 +88,8 @@ public partial class _Default : Page
                     int id = _proxy.CreateOrder(title, client, email, address, quantity);
                     if (id > 0)
                     {
-                        ErrorLabel.Text = "Order successfully created. The id of your order is " + id + ".\n You can check your order state at http://localhost:8994/TrackOrder.aspx";
+                        ErrorLabel.Text = "Order successfully created. The id of your order is " + id + ".\n Click below to check its state.";
+                        RefreshGUI();
                     }
                 }
             }
@@ -93,17 +98,6 @@ public partial class _Default : Page
                 ErrorLabel.Text = "Error processing the input.";
                 return;
             }
-
-            
         }
-
-        
-        //_proxy.ChangeOrderState(2, 'D', DateTime.Now.ToString("yyyy-MM-dd"));
     }
-
-    public void Test(object sender, EventArgs e)
-    {
-        _proxy.TestMSMQ("teste");
-    }
-    
 }

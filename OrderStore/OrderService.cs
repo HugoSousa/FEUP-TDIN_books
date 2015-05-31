@@ -313,7 +313,7 @@ namespace OrderStore
                     {
                         c.Open();
                         string sql =
-                            "select id, quantity, book, address, email, state, total_price, client_name from [Order] where book = @book and state = 'W' order by order_date;";
+                            "select id, quantity, book, address, email, state, total_price, client_name from [Order] where book = @book and state = 'S' order by order_date;";
                         SqlCommand cmd = new SqlCommand(sql, c);
                         cmd.Parameters.Add("@book", SqlDbType.NVarChar, 50).Value = title;
                         SqlDataReader reader = cmd.ExecuteReader();
